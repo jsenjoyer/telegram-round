@@ -1,21 +1,11 @@
 import { Update, Ctx, Start, Help, On, Hears } from 'nestjs-telegraf';
+import { Context } from 'telegraf';
 
 @Update()
 export class AppUpdate {
   @Start()
-  async start(@Ctx() ctx: any) {
-    console.log('start');
-    await ctx.reply('Welcome');
-  }
-
-  @Help()
-  async help(@Ctx() ctx: any) {
-    await ctx.reply('Send me a sticker');
-  }
-
-  @On('sticker')
-  async on(@Ctx() ctx: any) {
-    await ctx.reply('👍');
+  async start(@Ctx() ctx: Context) {
+    await ctx.reply('welcome');
   }
 
   @Hears('hi')
