@@ -1,7 +1,7 @@
 import { Update, Ctx, Start, Help, On, Hears } from 'nestjs-telegraf';
 import { Context } from 'telegraf';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './schemas/user.schema';
+import { User } from './schemas/user/user.schema';
 import { Model } from 'mongoose';
 
 @Update()
