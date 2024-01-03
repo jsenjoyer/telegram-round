@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { session } from 'telegraf';
 import { UserModule } from './modules/user/user.module';
 import { VideoModule } from './modules/video/video.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { VideoModule } from './modules/video/video.module';
     MongooseModule.forRoot(process.env.MONGO_DB),
     UserModule,
     VideoModule,
+    SharedModule,
   ],
   controllers: [],
   providers: [],
