@@ -5,6 +5,7 @@ import * as process from 'process';
 import { MongooseModule } from '@nestjs/mongoose';
 import { session } from 'telegraf';
 import { UserModule } from './modules/user/user.module';
+import { VideoModule } from './modules/video/video.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     MongooseModule.forRoot(process.env.MONGO_DB),
     UserModule,
+    VideoModule,
   ],
   controllers: [],
   providers: [],
