@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TelegrafModule, Use } from 'nestjs-telegraf';
+import { TelegrafModule } from 'nestjs-telegraf';
 import * as process from 'process';
-import { AppUpdate } from './app.update';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './schemas/user.schema';
 import { session } from 'telegraf';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -15,9 +14,9 @@ import { session } from 'telegraf';
       middlewares: [session()],
     }),
     MongooseModule.forRoot(process.env.MONGO_DB),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    UserModule,
   ],
   controllers: [],
-  providers: [AppUpdate],
+  providers: [],
 })
 export class AppModule {}
