@@ -4,6 +4,7 @@ import { Context, Telegraf } from 'telegraf';
 import { Message } from '@telegraf/types';
 import VideoMessage = Message.VideoMessage;
 import { FilesService } from '../../services/files.service';
+import { Ffmpeg, InjectFluentFfmpeg } from '@mrkwskiti/fluent-ffmpeg-nestjs';
 
 export const VIDEO_WIZARD = 'video-wizard';
 
@@ -11,6 +12,7 @@ export const VIDEO_WIZARD = 'video-wizard';
 export class VideoWizard {
   constructor(
     @InjectBot() private readonly bot: Telegraf<Context>,
+    @InjectFluentFfmpeg() private readonly fi: Ffmpeg,
     private readonly fileService: FilesService,
   ) {}
 
