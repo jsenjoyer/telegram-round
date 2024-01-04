@@ -28,6 +28,7 @@
     "@nestjs/mongoose": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
     "axios": "^1.6.3",
+    "ffmpeg-static": "^5.2.0",
     "fluent-ffmpeg": "^2.1.2",
     "mongoose": "^8.0.3",
     "nestjs-telegraf": "^2.7.0",
