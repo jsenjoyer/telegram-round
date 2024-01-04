@@ -9,8 +9,6 @@ import { HttpService } from '@nestjs/axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { StreamableFile } from '@nestjs/common';
-import { fsReadFile } from 'ts-loader/dist/utils';
 
 export const VIDEO_WIZARD = 'video-wizard';
 
@@ -25,20 +23,28 @@ export class VideoWizard {
 
   @WizardStep(1)
   async step1(ctx: WizardContext) {
-    await ctx.reply('Send me a video');
+    const { message_id } = await ctx.reply('Send me a video');
+    // @ts-ignore
+    ctx.wizard.state.message = message_id;
     ctx.wizard.next();
   }
 
   @WizardStep(2)
   @On('video')
   async step2(ctx: WizardContext) {
-    console.log('video');
+    this.bot.telegram.editMessageText(
+      ctx.chat.id,
+      // @ts-ignore
+      ctx.wizard.state?.message,
+      undefined,
+      'Processing...',
+    );
     const message = ctx.message as VideoMessage;
-    ctx.replyWithVideo(message.video.file_id);
     this.bot.telegram.getFileLink(message.video.file_id).then(async (link) => {
-      const writer = fs.createWriteStream(
-        path.join(os.homedir(), 'Desktop', '2.mp4'),
-      );
+      const fileName = link.href.split('/').pop();
+      const dowlonadPath = path.join(os.homedir(), 'Desktop', fileName);
+      const newFile = path.join(os.homedir(), 'Desktop', 'new_' + fileName);
+      const writer = fs.createWriteStream(dowlonadPath, { flags: 'w' });
       const response = await this.http.axiosRef({
         url: link.href,
         method: 'GET',
@@ -46,10 +52,15 @@ export class VideoWizard {
       });
       response.data.pipe(writer);
       writer.on('finish', () => {
-        const data = fs.readFileSync(
-          path.join(os.homedir(), 'Desktop', '2.mp4'),
-        );
-        ctx.sendVideo({ source: data });
+        this.fi({ source: dowlonadPath })
+          .videoCodec('copy')
+          .audioCodec('copy')
+          .duration(1)
+          .save(newFile)
+          .on('end', () => {
+            const file = fs.readFileSync(newFile);
+            ctx.sendVideo({ source: file });
+          });
       });
     });
   }
