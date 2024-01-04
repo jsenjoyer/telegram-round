@@ -32,13 +32,6 @@ export class VideoWizard {
   @WizardStep(2)
   @On('video')
   async step2(ctx: WizardContext) {
-    this.bot.telegram.editMessageText(
-      ctx.chat.id,
-      // @ts-ignore
-      ctx.wizard.state?.message,
-      undefined,
-      'Processing...',
-    );
     const message = ctx.message as VideoMessage;
     this.bot.telegram.getFileLink(message.video.file_id).then(async (link) => {
       const fileName = link.href.split('/').pop();
@@ -53,13 +46,16 @@ export class VideoWizard {
       response.data.pipe(writer);
       writer.on('finish', () => {
         this.fi({ source: dowlonadPath })
-          .videoCodec('copy')
-          .audioCodec('copy')
           .duration(1)
+          .videoFilter(
+            "crop='if(gte(iw/ih,1),ih,iw)': 'if(gte(ih/iw,1),iw,ih)'",
+          )
           .save(newFile)
-          .on('end', () => {
+          .on('end', async () => {
             const file = fs.readFileSync(newFile);
-            ctx.sendVideo({ source: file });
+            await ctx.replyWithVideo({ source: file });
+            ctx.scene.leave();
+            ctx.scene.enter(VIDEO_WIZARD);
           });
       });
     });
