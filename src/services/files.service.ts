@@ -7,6 +7,8 @@ export class FilesService {
   constructor(private readonly http: HttpService) {}
 
   getFileBuffer(url: string) {
-    return this.http.get(url).pipe(map((res) => res.data));
+    return this.http
+      .get(url, { responseType: 'arraybuffer' })
+      .pipe(map((res) => res.data));
   }
 }
