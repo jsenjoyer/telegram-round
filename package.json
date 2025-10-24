@@ -9,5 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "@types/node": "^24.9.1",
+    "grammy": "^1.38.3",
+    "typescript": "^5.9.3"
+  }
 }
